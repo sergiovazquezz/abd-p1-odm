@@ -6,3 +6,5 @@ __pycache__/
 
 # Credenciales locales, por si acaso
 .env
+
+enunciado.pdf
