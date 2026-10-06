@@ -126,12 +126,13 @@ class Model:
         if name in self._internal_vars:
             super().__setattr__(name, value)
             return
-        #TODO
-        # Realizar las comprabociones y gestiones necesarias
-        # antes de la asignacion.
 
-        # Asigna el valor value a la variable name
-        self._data[name] = value
+        allowed = self._required_vars | self._admissible_vars
+        if name in allowed:
+            self._data[name] = value
+            self._modified_vars.add(name)
+        else:
+            raise ValueError(f"Invalid field: {name}")
 
     def __getattr__(self, name: str) -> Any:
         """ Sobreescribe el metodo de acceso a atributos del objeto
@@ -326,23 +327,27 @@ def initApp(definitions_path: str = "./models.yml", mongodb_uri="mongodb://local
         db_name : str
             nombre de la base de datos
     """
-    #TODO
-    # Inicializar base de datos
+    client = MongoClient(mongodb_uri)
+    db = client[db_name]
 
-    #TODO
-    # Declarar tantas clases modelo colecciones existan en la base de datos
-    # Leer el fichero de definiciones de modelos para obtener las colecciones,
-    # indices y los atributos admitidos y requeridos para cada una de ellas.
-    # Ejemplo de declaracion de modelo para colecion llamada MiModelo
-    scope["MiModelo"] = type("MiModelo", (Model,),{})
-    # La clase se declara en tiempo de ejecucion y queda en scope, que no tiene
-    # por que ser el espacio de nombres global: las pruebas le pasan su propio
-    # diccionario. Por eso se inicializa a traves de scope y no por su nombre,
-    # que ahi todavia no existe.
-    scope["MiModelo"].init_class(db_collection=None, indexes=None, required_vars=None, admissible_vars=None)
+    with open(definitions_path, "r", encoding="utf-8") as definitions_file:
+        models = yaml.safe_load(definitions_file)
+
+        for model_name, definition in models.items():
+            scope[model_name] = type(model_name, (Model,),{})
+
+            indexes = {}
+            for index in definition["unique_indexes"]:
+                indexes[index] = "unique"
+            for index in definition["regular_indexes"]:
+                indexes[index] = "asc"
+
+            if "location_index" in definition:
+                indexes[definition["location_index"]] = "geosphere"
+
+            scope[model_name].init_class(db[model_name], indexes, set(definition["required_vars"]), set(definition["admissible_vars"]))
 
 if __name__ == '__main__':
-    
     # Inicializar base de datos y modelos con initApp
     #TODO
     initApp()
