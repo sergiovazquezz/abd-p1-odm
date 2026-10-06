@@ -256,13 +256,16 @@ class Model:
         cls._db = db_collection
         cls._required_vars = required_vars
         cls._admissible_vars = admissible_vars
-        # TODO
-        # Recorrer indexes y crear cada índice segun su tipo: 'unique', 'asc'
-        # y 'geosphere'. Comparar el tipo por igualdad, no con el operador 'in'.
-        # Ojo con el índice geoespacial: save() guarda el GeoJSON Point en
-        # <campo>_loc, luego el índice 2dsphere va sobre <campo>_loc, mientras
-        # que _location_var debe guardar el nombre del campo base.
+        cls._location_var = None
 
+        for field, index_type in indexes.items():
+            if index_type == "unique":
+                cls._db.create_index([(field, pymongo.ASCENDING)], unique=True)
+            elif index_type == "asc":
+                cls._db.create_index([(field, pymongo.ASCENDING)])
+            elif index_type == "geosphere":
+                cls._location_var = field;
+                cls._db.create_index([(f"{field}_loc", pymongo.GEOSPHERE)])
 
 class ModelCursor:
     """ 
