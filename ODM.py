@@ -106,16 +106,16 @@ class Model:
                 diccionario con los valores de las atributos del modelo
         """
         self._data: dict[str, str | dict | list] = {}
-        #TODO
-        # Realizar las comprabociones y gestiones necesarias
-        # antes de la asignacion.
 
-        # Asigna todos los valores en kwargs a las atributos con 
-        # nombre las claves en kwargs
-        # Utilizamos el atributo data para guardar los variables 
-        # almacenadas en la base de datos en una solo atributo
-        # Encapsular los datos en una sola variable facilita la 
-        # gestion en metodos como save.
+        if not self._required_vars.issubset(kwargs):
+            raise ValueError("Missing required fields")
+
+        allowed = self._required_vars | self._admissible_vars | {"_id"}
+        if not set(kwargs).issubset(allowed):
+            raise ValueError("Unknown fields")
+
+        self._modified_vars = set()
+
         self._data.update(kwargs)
 
     def __setattr__(self, name: str, value: str | dict) -> None:
@@ -153,15 +153,27 @@ class Model:
         actualiza el documento existente con los nuevos valores del
         modelo.
         """
-        #TODO
-        pass #No olvidar eliminar esta linea una vez implementado
+        if "_id" not in self._data:
+            result = self._db.insert_one(self._data.copy())
+            self._data["_id"] = result.inserted_id
+        elif self._modified_vars:
+            changes = {}
+            for name in self._modified_vars:
+                changes[name] = self._data[name]
+
+            self._db.update_one(
+              {"_id": self._data["_id"]},
+              {"$set": changes},
+          )
+
+        self._modified_vars.clear()
 
     def delete(self) -> None:
         """
         Elimina el modelo de la base de datos
         """
-        #TODO
-        pass
+        if "_id" in self._data:
+            self._db.delete_one({"_id": self._data["_id"]})
     
     @classmethod
     def find(cls, filter: dict[str, str | dict]) -> Any:
