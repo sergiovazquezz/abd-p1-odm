@@ -1,5 +1,5 @@
 __author__ = 'Pablo Ramos Criado'
-__students__ = 'Nombres_y_Apellidos'
+__students__ = 'Sergio_Vázquez _Samuel_Millan'
 
 
 from geopy.geocoders import Nominatim
@@ -11,10 +11,12 @@ import pymongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from bson.objectid import ObjectId
+from uuid import uuid4
+
 import yaml
 
 def getLocationPoint(address: str) -> Point:
-    """ 
+    """
     Obtiene las coordenadas de una dirección en formato geojson.Point
     Utilizar la API de geopy para obtener las coordenadas de la direccion
     Cuidado, la API es publica tiene limite de peticiones, utilizar sleeps.
@@ -28,26 +30,25 @@ def getLocationPoint(address: str) -> Point:
         geojson.Point
             coordenadas del punto de la direccion
     """
+    geolocator = Nominatim(user_agent="envivo-" + str(uuid4()))
+
     location = None
     intentos = 0
     maxIntentos = 5
+
     while location is None and intentos < maxIntentos:
         intentos += 1
+
         try:
             time.sleep(1)
-            #TODO
-            # Es necesario proporcionar un user_agent para utilizar la API
-            # Utilizar un nombre aleatorio para el user_agent
-            location = Nominatim(user_agent="Mi-Nombre-Aleatorio").geocode(address)
+            location = geolocator.geocode(address)
         except GeocoderTimedOut:
-            # Puede lanzar una excepcion si se supera el tiempo de espera
-            # Volver a intentarlo
             continue
-    #TODO
-    # Devolver un GeoJSON de tipo punto con la latitud y longitud almacenadas.
-    # Si no se consiguieron coordenadas, lanzar ValueError: la funcion no puede
-    # devolver un punto inventado ni None silenciosamente. Es lo que espera la
-    # prueba test_get_location_point_timeout_failure.
+
+    if location is None:
+        raise ValueError("No se pudieron obtener coordenadas")
+
+    return Point((location.longitude, location.latitude))   
 
 class Model:
     """ 
@@ -111,6 +112,10 @@ class Model:
             raise ValueError("Missing required fields")
 
         allowed = self._required_vars | self._admissible_vars | {"_id"}
+
+        if self._location_var is not None:
+            allowed.add(self._location_var + "_loc")
+
         if not set(kwargs).issubset(allowed):
             raise ValueError("Unknown fields")
 
@@ -148,24 +153,36 @@ class Model:
         
     def save(self) -> None:
         """
-        Guarda el modelo en la base de datos
-        Si el modelo no existe en la base de datos, se crea un nuevo
-        documento con los valores del modelo. En caso contrario, se
-        actualiza el documento existente con los nuevos valores del
-        modelo.
+        Guarda el modelo en la base de datos.
+        Si no existe, inserta un documento nuevo.
+        Si ya existe, actualiza los atributos modificados.
         """
+        address_field = self._location_var
+
+        if address_field is not None and address_field in self._data:
+            point_field = address_field + "_loc"
+
+            if (
+                "_id" not in self._data
+                or address_field in self._modified_vars
+                or point_field not in self._data
+            ):
+                self._data[point_field] = getLocationPoint(self._data[address_field])
+                self._modified_vars.add(point_field)
+
         if "_id" not in self._data:
             result = self._db.insert_one(self._data.copy())
             self._data["_id"] = result.inserted_id
+
         elif self._modified_vars:
             changes = {}
             for name in self._modified_vars:
                 changes[name] = self._data[name]
 
             self._db.update_one(
-              {"_id": self._data["_id"]},
-              {"$set": changes},
-          )
+                {"_id": self._data["_id"]},
+                {"$set": changes},
+            )
 
         self._modified_vars.clear()
 
@@ -353,35 +370,41 @@ def initApp(definitions_path: str = "./models.yml", mongodb_uri="mongodb://local
 
             scope[model_name].init_class(db[model_name], indexes, set(definition["required_vars"]), set(definition["admissible_vars"]))
 
-if __name__ == '__main__':
-    # Inicializar base de datos y modelos con initApp
-    #TODO
+if __name__ == "__main__":
+    # Inicializar los modelos.
     initApp()
 
-    #Ejemplo
-    m = MiModelo(nombre="Pablo", apellido="Ramos", edad=18)
+    # Crear modelo.
+    m = Artista(nombre="Artista de prueba", generos=["rock"])
+
+    # Asignar un atributo admitido antes de guardar.
+    m.pais = "España"
+
+    # Intentar asignar un atributo no admitido.
+    try:
+        m.edad = 30
+    except ValueError as error:
+        print(error)
+
+    # Guardar el documento nuevo.
     m.save()
-    m.nombre="Pedro"
-    print(m.nombre)
 
-    # Hacer pruebas para comprobar que funciona correctamente el modelo
-    #TODO
-    # Crear modelo
+    # Modificar un atributo admitido.
+    m.pais = "Portugal"
 
-    # Asignar nuevo valor a variable admitida del objeto 
+    # Guardar los cambios.
+    m.save()
 
-    # Asignar nuevo valor a variable no admitida del objeto 
+    # Buscar el documento.
+    resultados = Artista.find({"nombre": "Artista de prueba"})
 
-    # Guardar
+    # Obtener el primer documento como objeto modelo.
+    encontrado = next(iter(resultados))
 
-    # Asignar nuevo valor a variable admitida del objeto
+    # Modificar el objeto recuperado.
+    encontrado.pais = "Francia"
 
-    # Guardar
+    # Guardar los cambios.
+    encontrado.save()
 
-    # Buscar nuevo documento con find
-
-    # Obtener primer documento
-
-    # Modificar valor de variable admitida
-
-    # Guardar
+    print(encontrado.nombre, encontrado.pais)
