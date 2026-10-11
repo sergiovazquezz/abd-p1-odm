@@ -16,6 +16,20 @@ from uuid import uuid4
 import yaml
 
 def getLocationPoint(address: str) -> Point:
+    """
+    Obtiene las coordenadas de una dirección en formato geojson.Point
+    Utilizar la API de geopy para obtener las coordenadas de la direccion
+    Cuidado, la API es publica tiene limite de peticiones, utilizar sleeps.
+
+    Parameters
+    ----------
+        address : str
+            direccion completa de la que obtener las coordenadas
+    Returns
+    -------
+        geojson.Point
+            coordenadas del punto de la direccion
+    """
     geolocator = Nominatim(user_agent="envivo-" + str(uuid4()))
 
     location = None
@@ -153,9 +167,7 @@ class Model:
                 or address_field in self._modified_vars
                 or point_field not in self._data
             ):
-                self._data[point_field] = getLocationPoint(
-                    self._data[address_field]
-                )
+                self._data[point_field] = getLocationPoint(self._data[address_field])
                 self._modified_vars.add(point_field)
 
         if "_id" not in self._data:
