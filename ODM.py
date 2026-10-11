@@ -11,7 +11,6 @@ import pymongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from bson.objectid import ObjectId
-from uuid import uuid4
 
 import yaml
 
@@ -30,7 +29,7 @@ def getLocationPoint(address: str) -> Point:
         geojson.Point
             coordenadas del punto de la direccion
     """
-    geolocator = Nominatim(user_agent="envivo-" + str(uuid4()))
+    geolocator = Nominatim(user_agent="envivo-geolocator-advdb")
 
     location = None
     intentos = 0
