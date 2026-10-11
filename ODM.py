@@ -407,3 +407,66 @@ if __name__ == "__main__":
     encontrado.save()
 
     print(encontrado.nombre, encontrado.pais)
+
+    # Borrar el artista
+    m.delete()
+
+    recintos = [
+        Recinto(nombre="La Riviera", direccion="Madrid, España", aforo=100,
+                zonas={"pista": 80, "grada": 20}, servicios=["bar"]),
+        Recinto(nombre="Sala Apolo", direccion="Barcelona, España", aforo=200,
+                zonas={"pista": 150, "grada": 50}, servicios=["bar", "guardarropa"]),
+        Recinto(nombre="La Rambleta", direccion="Valencia, España", aforo=300,
+                zonas={"pista": 200, "grada": 100}, servicios=["guardarropa"]),
+        Recinto(nombre="Bilborock", direccion="Bilbao, España", aforo=400,
+                zonas={"pista": 300, "grada": 100}, servicios=["bar"]),
+    ]
+
+    artistas = [
+        Artista(nombre="Bad Bunny", generos=["rock"], pais="Puerto Rico", año_inicio=2010),
+        Artista(nombre="Aitana", generos=["pop"], pais="España", año_inicio=2015),
+        Artista(nombre="Quevedo", generos=["jazz", "folk"], pais="España", año_inicio=2018),
+        Artista(nombre="Myke Towers", generos=["rock", "pop"], pais="Puerto Rico", año_inicio=2020),
+    ]
+
+    asistentes = [
+        Asistente(nombre="Ana Inventada", email="ana@example.com",
+                  fecha_registro="2022-01-10", generos_favoritos=["rock"]),
+        Asistente(nombre="Luis Inventado", email="luis@example.com",
+                  fecha_registro="2023-02-15", generos_favoritos=["pop", "jazz"]),
+        Asistente(nombre="Marta Inventada", email="marta@example.com",
+                  fecha_registro="2024-03-20", generos_favoritos=["folk"]),
+        Asistente(nombre="Pedro Inventado", email="pedro@example.com",
+                  fecha_registro="2025-04-25"),
+    ]
+
+    # Reutilizar los documentos existentes al ejecutar el programa otra vez.
+    for modelo, registros, campo in [(Recinto, recintos, "nombre"),
+                                     (Artista, artistas, "nombre"),
+                                     (Asistente, asistentes, "email")]:
+        for i, registro in enumerate(registros):
+            existentes = list(modelo.find({campo: getattr(registro, campo)}))
+            if existentes:
+                registros[i] = existentes[0]
+            else:
+                registro.save()
+
+    eventos = [
+        Evento(titulo="Noche Azul", artistas=[artistas[0]._id, artistas[3]._id],
+               recinto=recintos[0]._id, fecha_hora="2023-05-12T20:00:00",
+               precio_zona={"pista": 10, "grada": 15}, entradas_vendidas=50),
+        Evento(titulo="Noche Violeta", artistas=[artistas[1]._id],
+               recinto=recintos[1]._id, fecha_hora="2024-06-15T21:00:00",
+               precio_zona={"pista": 15, "grada": 20}, entradas_vendidas=200),
+        Evento(titulo="Noche Verde", artistas=[artistas[2]._id],
+               recinto=recintos[2]._id, fecha_hora="2025-07-18T19:00:00",
+               precio_zona={"pista": 20, "grada": 25}, entradas_vendidas=0),
+        Evento(titulo="Noche Roja", artistas=[artistas[3]._id],
+               recinto=recintos[3]._id, fecha_hora="2026-08-21T22:00:00",
+               precio_zona={"pista": 25, "grada": 30}, entradas_vendidas=150),
+    ]
+    for evento in eventos:
+        if not list(Evento.find({"titulo": evento.titulo})):
+            evento.save()
+
+    print("Datos guardados: 4 recintos, 4 artistas, 4 eventos y 4 asistentes.")

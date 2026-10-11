@@ -1,0 +1,108 @@
+[{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b507"
+	},
+	"titulo": "Noche Azul",
+	"artistas": [
+		{
+			"$oid": "6acbb72bdcef16d7df78b4ff"
+		},
+		{
+			"$oid": "6acbb72bdcef16d7df78b502"
+		}
+	],
+	"recinto": {
+		"$oid": "6acbb728dcef16d7df78b4fb"
+	},
+	"fecha_hora": "2023-05-12T20:00:00",
+	"precio_zona": {
+		"pista": {
+			"$numberInt": "10"
+		},
+		"grada": {
+			"$numberInt": "15"
+		}
+	},
+	"entradas_vendidas": {
+		"$numberInt": "50"
+	}
+},
+{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b508"
+	},
+	"titulo": "Noche Violeta",
+	"artistas": [
+		{
+			"$oid": "6acbb72bdcef16d7df78b500"
+		}
+	],
+	"recinto": {
+		"$oid": "6acbb729dcef16d7df78b4fc"
+	},
+	"fecha_hora": "2024-06-15T21:00:00",
+	"precio_zona": {
+		"pista": {
+			"$numberInt": "15"
+		},
+		"grada": {
+			"$numberInt": "20"
+		}
+	},
+	"entradas_vendidas": {
+		"$numberInt": "200"
+	}
+},
+{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b509"
+	},
+	"titulo": "Noche Verde",
+	"artistas": [
+		{
+			"$oid": "6acbb72bdcef16d7df78b501"
+		}
+	],
+	"recinto": {
+		"$oid": "6acbb72adcef16d7df78b4fd"
+	},
+	"fecha_hora": "2025-07-18T19:00:00",
+	"precio_zona": {
+		"pista": {
+			"$numberInt": "20"
+		},
+		"grada": {
+			"$numberInt": "25"
+		}
+	},
+	"entradas_vendidas": {
+		"$numberInt": "0"
+	}
+},
+{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b50a"
+	},
+	"titulo": "Noche Roja",
+	"artistas": [
+		{
+			"$oid": "6acbb72bdcef16d7df78b502"
+		}
+	],
+	"recinto": {
+		"$oid": "6acbb72bdcef16d7df78b4fe"
+	},
+	"fecha_hora": "2026-08-21T22:00:00",
+	"precio_zona": {
+		"pista": {
+			"$numberInt": "25"
+		},
+		"grada": {
+			"$numberInt": "30"
+		}
+	},
+	"entradas_vendidas": {
+		"$numberInt": "150"
+	}
+}]
+

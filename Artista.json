@@ -1,0 +1,55 @@
+[{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b4ff"
+	},
+	"nombre": "Bad Bunny",
+	"generos": [
+		"rock"
+	],
+	"pais": "Puerto Rico",
+	"año_inicio": {
+		"$numberInt": "2010"
+	}
+},
+{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b500"
+	},
+	"nombre": "Aitana",
+	"generos": [
+		"pop"
+	],
+	"pais": "España",
+	"año_inicio": {
+		"$numberInt": "2015"
+	}
+},
+{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b501"
+	},
+	"nombre": "Quevedo",
+	"generos": [
+		"jazz",
+		"folk"
+	],
+	"pais": "España",
+	"año_inicio": {
+		"$numberInt": "2018"
+	}
+},
+{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b502"
+	},
+	"nombre": "Myke Towers",
+	"generos": [
+		"rock",
+		"pop"
+	],
+	"pais": "Puerto Rico",
+	"año_inicio": {
+		"$numberInt": "2020"
+	}
+}]
+

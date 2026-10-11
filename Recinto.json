@@ -1,0 +1,130 @@
+[{
+	"_id": {
+		"$oid": "6acbb728dcef16d7df78b4fb"
+	},
+	"nombre": "La Riviera",
+	"direccion": "Madrid, España",
+	"aforo": {
+		"$numberInt": "100"
+	},
+	"zonas": {
+		"pista": {
+			"$numberInt": "80"
+		},
+		"grada": {
+			"$numberInt": "20"
+		}
+	},
+	"servicios": [
+		"bar"
+	],
+	"direccion_loc": {
+		"type": "Point",
+		"coordinates": [
+			{
+				"$numberDouble": "-3.703507"
+			},
+			{
+				"$numberDouble": "40.416782"
+			}
+		]
+	}
+},
+{
+	"_id": {
+		"$oid": "6acbb729dcef16d7df78b4fc"
+	},
+	"nombre": "Sala Apolo",
+	"direccion": "Barcelona, España",
+	"aforo": {
+		"$numberInt": "200"
+	},
+	"zonas": {
+		"pista": {
+			"$numberInt": "150"
+		},
+		"grada": {
+			"$numberInt": "50"
+		}
+	},
+	"servicios": [
+		"bar",
+		"guardarropa"
+	],
+	"direccion_loc": {
+		"type": "Point",
+		"coordinates": [
+			{
+				"$numberDouble": "2.177073"
+			},
+			{
+				"$numberDouble": "41.38258"
+			}
+		]
+	}
+},
+{
+	"_id": {
+		"$oid": "6acbb72adcef16d7df78b4fd"
+	},
+	"nombre": "La Rambleta",
+	"direccion": "Valencia, España",
+	"aforo": {
+		"$numberInt": "300"
+	},
+	"zonas": {
+		"pista": {
+			"$numberInt": "200"
+		},
+		"grada": {
+			"$numberInt": "100"
+		}
+	},
+	"servicios": [
+		"guardarropa"
+	],
+	"direccion_loc": {
+		"type": "Point",
+		"coordinates": [
+			{
+				"$numberDouble": "-0.376335"
+			},
+			{
+				"$numberDouble": "39.469707"
+			}
+		]
+	}
+},
+{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b4fe"
+	},
+	"nombre": "Bilborock",
+	"direccion": "Bilbao, España",
+	"aforo": {
+		"$numberInt": "400"
+	},
+	"zonas": {
+		"pista": {
+			"$numberInt": "300"
+		},
+		"grada": {
+			"$numberInt": "100"
+		}
+	},
+	"servicios": [
+		"bar"
+	],
+	"direccion_loc": {
+		"type": "Point",
+		"coordinates": [
+			{
+				"$numberDouble": "-2.935004"
+			},
+			{
+				"$numberDouble": "43.263002"
+			}
+		]
+	}
+}]
+

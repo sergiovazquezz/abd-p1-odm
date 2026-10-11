@@ -1,0 +1,43 @@
+[{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b503"
+	},
+	"nombre": "Ana Inventada",
+	"email": "ana@example.com",
+	"fecha_registro": "2022-01-10",
+	"generos_favoritos": [
+		"rock"
+	]
+},
+{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b504"
+	},
+	"nombre": "Luis Inventado",
+	"email": "luis@example.com",
+	"fecha_registro": "2023-02-15",
+	"generos_favoritos": [
+		"pop",
+		"jazz"
+	]
+},
+{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b505"
+	},
+	"nombre": "Marta Inventada",
+	"email": "marta@example.com",
+	"fecha_registro": "2024-03-20",
+	"generos_favoritos": [
+		"folk"
+	]
+},
+{
+	"_id": {
+		"$oid": "6acbb72bdcef16d7df78b506"
+	},
+	"nombre": "Pedro Inventado",
+	"email": "pedro@example.com",
+	"fecha_registro": "2025-04-25"
+}]
+
